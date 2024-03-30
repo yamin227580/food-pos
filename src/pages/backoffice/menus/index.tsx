@@ -1,9 +1,11 @@
 import NewMenu from "@/components/NewMenu";
-import { Box, Button } from "@mui/material";
+import { useAppSelector } from "@/store/hooks";
+import { Box, Button, Typography } from "@mui/material";
 import { useState } from "react";
 
 const MenusPage = () => {
   const [open, setOpen] = useState(false);
+  const menus = useAppSelector((state) => state.menu.items);
   return (
     <Box>
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
@@ -11,7 +13,9 @@ const MenusPage = () => {
           New menu
         </Button>
       </Box>
-      <h1>Other stuffs here ...</h1>
+      {menus.map((item) => (
+        <Typography>{item.name}</Typography>
+      ))}
       <NewMenu open={open} setOpen={setOpen} />
     </Box>
   );

@@ -1,9 +1,11 @@
 import NewAddonCategory from "@/components/NewAddonCategory";
-import { Box, Button } from "@mui/material";
+import { useAppSelector } from "@/store/hooks";
+import { Box, Button, Typography } from "@mui/material";
 import { useState } from "react";
 
 const AddonCategoriesPage = () => {
   const [open, setOpen] = useState(false);
+  const addonCategories = useAppSelector((state) => state.addonCategory.items);
   return (
     <Box>
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
@@ -11,7 +13,9 @@ const AddonCategoriesPage = () => {
           New addon category
         </Button>
       </Box>
-      <h1>Other stuffs here ...</h1>
+      {addonCategories.map((item) => (
+        <Typography>{item.name}</Typography>
+      ))}
       <NewAddonCategory open={open} setOpen={setOpen} />
     </Box>
   );

@@ -1,9 +1,11 @@
 import NewLocation from "@/components/NewLocation";
-import { Box, Button } from "@mui/material";
+import { useAppSelector } from "@/store/hooks";
+import { Box, Button, Typography } from "@mui/material";
 import { useState } from "react";
 
 const LocationPage = () => {
   const [open, setOpen] = useState(false);
+  const locations = useAppSelector((state) => state.location.items);
   return (
     <Box>
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
@@ -11,7 +13,9 @@ const LocationPage = () => {
           New location
         </Button>
       </Box>
-      <h1>Other stuffs here ...</h1>
+      {locations.map((item) => (
+        <Typography>{item.name}</Typography>
+      ))}
       <NewLocation open={open} setOpen={setOpen} />
     </Box>
   );
