@@ -9,3 +9,7 @@ export interface LocationSlice {
   isLoading: boolean;
   error: Error | null;
 }
+export interface CreateNewLocationOptions extends BaseOptions {
+  name: string;
+  address: string;
+}

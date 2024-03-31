@@ -7,15 +7,31 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const SettingsPage = () => {
   const locations = useAppSelector((state) => state.location.items);
   const [locationId, setLocationId] = useState<number>();
 
+  useEffect(() => {
+    if (locations.length) {
+      const selectedLocationId = localStorage.getItem("selectedLocationId");
+      if (selectedLocationId) {
+        setLocationId(Number(selectedLocationId));
+      } else {
+        const firstLocationId = locations[0].id;
+        setLocationId(Number(firstLocationId));
+        localStorage.setItem("selectedLocationId", String(firstLocationId));
+      }
+    }
+  }, [locations]);
+
   const handleLocationChange = (evt: SelectChangeEvent<number>) => {
     localStorage.setItem("selectedLocationId", String(evt.target.value));
+    setLocationId(Number(evt.target.value));
   };
+
+  if (!locationId) return null;
 
   return (
     <Box>
