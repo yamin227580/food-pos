@@ -13,3 +13,9 @@ export interface MenuSlice {
 export interface GetMenuOptions extends BaseOptions {
   locationId: string;
 }
+
+export interface CreateMenuOptions extends BaseOptions {
+  name: string;
+  price: number;
+  menuCategoryIds: number[];
+}

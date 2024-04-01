@@ -1,9 +1,11 @@
-import { AddonSlice } from "@/types/addon";
-import { CreateMenuCategoryOptions } from "@/types/menuCategory";
+import {
+  CreateMenuCategoryOptions,
+  MenuCategorySlice,
+} from "@/types/menuCategory";
 import { config } from "@/utils/config";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-const initialState: AddonSlice = {
+const initialState: MenuCategorySlice = {
   items: [],
   isLoading: false,
   error: null,
