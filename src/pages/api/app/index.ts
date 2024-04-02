@@ -108,12 +108,12 @@ export default async function handler(
     const menuCategoryIds = menuCategories.map((item) => item.id);
 
     // 4. find menu
-    const menuCategoryMenu = await prisma.menuCategoryMenu.findMany({
+    const menuCategoryMenus = await prisma.menuCategoryMenu.findMany({
       where: { menuCategoryId: { in: menuCategoryIds } },
     });
-    const menuIds = menuCategoryMenu.map((item) => item.menuId);
+    const menuIds = menuCategoryMenus.map((item) => item.menuId);
     const menus = await prisma.menu.findMany({
-      where: { id: { in: menuIds } },
+      where: { id: { in: menuIds }, isArchived: false },
     });
 
     // 5. find addon category
@@ -142,6 +142,7 @@ export default async function handler(
       locations,
       menuCategories,
       menus,
+      menuCategoryMenus,
       addonCategories,
       addons,
       tables,

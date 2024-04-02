@@ -28,6 +28,51 @@ export default async function handler(
       )
     );
     return res.status(200).json({ menu, menuCategoryMenus });
+  } else if (method === "PUT") {
+    //get data from request
+    const { id, name, price, menuCategoryIds } = req.body;
+
+    //data validation
+    const isValid =
+      id && name && price !== undefined && menuCategoryIds.length > 0;
+    if (!isValid) return res.status(400).send("Bad request.");
+
+    //update menu
+    const menu = await prisma.menu.update({
+      data: { name, price },
+      where: { id },
+    });
+
+    // create updated data
+    const menuCategoryMenusData: { menuId: number; menuCategoryId: number }[] =
+      menuCategoryIds.map((item: number) => ({
+        menuId: id,
+        menuCategoryId: item,
+      }));
+
+    // delete old  menuCategoryMenu rows
+    await prisma.menuCategoryMenu.deleteMany({ where: { menuId: id } });
+
+    //update menuCategoryMenu with updated data
+    const menuCategoryMenus = await prisma.$transaction(
+      menuCategoryMenusData.map((item) =>
+        prisma.menuCategoryMenu.create({
+          data: { menuId: item.menuId, menuCategoryId: item.menuCategoryId },
+        })
+      )
+    );
+
+    //return updated menu and menuCategoryMenus
+    return res.status(200).json({ menu, menuCategoryMenus });
+  } else if (method === "DELETE") {
+    const menuId = Number(req.query.id);
+    const menu = await prisma.menu.findFirst({ where: { id: menuId } });
+    if (!menu) return res.status(400).send("Bad request.");
+    await prisma.menu.update({
+      data: { isArchived: true },
+      where: { id: menuId },
+    });
+    return res.status(200).send("Deleted.");
   }
   res.status(405).send("Method not allowed.");
 }
