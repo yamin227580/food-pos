@@ -1,7 +1,6 @@
 import {
   CreateMenuOptions,
   DeleteMenuOptions,
-  GetMenuOptions,
   MenuSlice,
   UpdateMenuOptions,
 } from "@/types/menu";
@@ -23,7 +22,7 @@ export const createMenu = createAsyncThunk(
   async (options: CreateMenuOptions, thunkApi) => {
     const { name, price, menuCategoryIds, onSuccess, onError } = options;
     try {
-      const response = await fetch(`${config.apiBaseUrl}/menu`, {
+      const response = await fetch(`${config.apiBaseUrl}/menus`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ name, price, menuCategoryIds }),
@@ -43,7 +42,7 @@ export const updateMenu = createAsyncThunk(
   async (options: UpdateMenuOptions, thunkApi) => {
     const { id, name, price, menuCategoryIds, onSuccess, onError } = options;
     try {
-      const response = await fetch(`${config.apiBaseUrl}/menu`, {
+      const response = await fetch(`${config.apiBaseUrl}/menus`, {
         method: "PUT",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ id, name, price, menuCategoryIds }),
@@ -63,27 +62,10 @@ export const deleteMenu = createAsyncThunk(
   async (options: DeleteMenuOptions, thunkApi) => {
     const { id, onSuccess, onError } = options;
     try {
-      await fetch(`${config.apiBaseUrl}/menu?id=${id}`, {
+      await fetch(`${config.apiBaseUrl}/menus?id=${id}`, {
         method: "DELETE",
       });
       thunkApi.dispatch(removeMenu({ id }));
-      onSuccess && onSuccess();
-    } catch (err) {
-      onError && onError();
-    }
-  }
-);
-
-export const getMenus = createAsyncThunk(
-  "menu/getMenus",
-  async (options: GetMenuOptions, thunkApi) => {
-    const { onSuccess, onError, locationId } = options;
-    try {
-      const response = await fetch(
-        `${config.apiBaseUrl}/menu?locationId=${locationId}`
-      );
-      const menus = response.json();
-      thunkApi.dispatch(setMenus(menus));
       onSuccess && onSuccess();
     } catch (err) {
       onError && onError();

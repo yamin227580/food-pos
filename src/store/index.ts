@@ -3,9 +3,11 @@ import addonCategoryReducer from "./slices/addonCategorySlice";
 import addonReducer from "./slices/addonSlice";
 import appReducer from "./slices/appSlice";
 import locationReducer from "./slices/locationSlice";
+import menuAddonCategoryReducer from "./slices/menuAddonCategorySlice";
 import menuCategoryMenuReducer from "./slices/menuCategoryMenuSlice";
 import menuCategoryReducer from "./slices/menuCategorySlice";
 import menuReducer from "./slices/menuSlice";
+import snackbarReducer from "./slices/snackbarSlice";
 import tableReducer from "./slices/tableSlice";
 // ...
 
@@ -15,10 +17,12 @@ export const store = configureStore({
     menu: menuReducer,
     menuCategory: menuCategoryReducer,
     menuCategoryMenu: menuCategoryMenuReducer,
+    menuAddonCategory: menuAddonCategoryReducer,
     addonCategory: addonCategoryReducer,
     addon: addonReducer,
     location: locationReducer,
     table: tableReducer,
+    snackbar: snackbarReducer,
   },
 });
 

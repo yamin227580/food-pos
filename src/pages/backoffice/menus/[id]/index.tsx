@@ -30,27 +30,29 @@ const MenuDetail = () => {
   const menuCategoryMenus = useAppSelector(
     (state) => state.menuCategoryMenu.items
   );
-  const menu = menus.find((item) => item.id === menuId);
-  const menuCategoryMenu = menuCategoryMenus.filter(
+  const currentMenu = menus.find((item) => item.id === menuId);
+  const currentMenuCategoryMenus = menuCategoryMenus.filter(
     (item) => item.menuId === menuId
   );
-  const menuCategoryIds = menuCategoryMenu.map((item) => item.menuCategoryId);
+  const menuCategoryIds = currentMenuCategoryMenus.map(
+    (item) => item.menuCategoryId
+  );
   const [data, setData] = useState<UpdateMenuOptions>();
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (menu) {
+    if (currentMenu) {
       setData({
         id: menuId,
-        name: menu.name,
-        price: menu.price,
+        name: currentMenu.name,
+        price: currentMenu.price,
         menuCategoryIds,
       });
     }
-  }, [menu]);
+  }, [currentMenu]);
 
-  if (!menu || !data) return null;
+  if (!currentMenu || !data) return null;
 
   const handleOnChange = (evt: SelectChangeEvent<number[]>) => {
     const selectedIds = evt.target.value as number[];
@@ -58,6 +60,8 @@ const MenuDetail = () => {
   };
 
   const handleUpdateMenu = () => {
+    const isValid = data.name && data.price && data.menuCategoryIds.length > 0;
+    if (!isValid) return;
     dispatch(updateMenu(data));
   };
 
@@ -78,12 +82,12 @@ const MenuDetail = () => {
         </Button>
       </Box>
       <TextField
-        defaultValue={menu.name}
+        defaultValue={currentMenu.name}
         sx={{ mb: 2 }}
         onChange={(evt) => setData({ ...data, name: evt.target.value })}
       />
       <TextField
-        defaultValue={menu.price}
+        defaultValue={currentMenu.price}
         sx={{ mb: 2 }}
         onChange={(evt) =>
           setData({ ...data, price: Number(evt.target.value) })

@@ -57,7 +57,7 @@ export default async function handler(
     const menuCategoryMenus = await prisma.$transaction(
       menuCategoryMenusData.map((item) =>
         prisma.menuCategoryMenu.create({
-          data: { menuId: item.menuId, menuCategoryId: item.menuCategoryId },
+          data: item,
         })
       )
     );

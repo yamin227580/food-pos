@@ -41,7 +41,8 @@ const NewMenu = ({ open, setOpen }: Props) => {
 
   // 4. Selected menu-category function
   const handleOnChange = (evt: SelectChangeEvent<number[]>) => {
-    //select internally login works adding evt value into menuCategoryIds array and remove it
+    //select internally logic works adding evt value into menuCategoryIds array and remove it
+    //don't need to push and remvove from menuCategoryId array
     const selectedIds = evt.target.value as number[];
     setNewMenu({ ...newMenu, menuCategoryIds: selectedIds });
   };
@@ -83,6 +84,7 @@ const NewMenu = ({ open, setOpen }: Props) => {
             value={newMenu.menuCategoryIds}
             label="Menu Category"
             onChange={handleOnChange}
+            //selectedMenuCategoryIds means the current selected value in value={newMenu.menuCategoryIds}
             renderValue={(selectedMenuCategoryIds) => {
               return selectedMenuCategoryIds
                 .map((selectedMenuCategoryId) => {

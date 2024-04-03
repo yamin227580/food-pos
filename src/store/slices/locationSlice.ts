@@ -13,7 +13,7 @@ export const createNewLocation = createAsyncThunk(
   async (options: CreateNewLocationOptions, thunkApi) => {
     const { name, address, onSuccess, onError } = options;
     try {
-      const response = await fetch(`${config.apiBaseUrl}/location`, {
+      const response = await fetch(`${config.apiBaseUrl}/locations`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ name, address }),
