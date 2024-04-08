@@ -68,6 +68,20 @@ export default async function handler(
     const menuId = Number(req.query.id);
     const menu = await prisma.menu.findFirst({ where: { id: menuId } });
     if (!menu) return res.status(400).send("Bad request.");
+    await prisma.menuAddonCategory.updateMany({
+      data: { isArchived: true },
+      where: { menuId },
+    });
+    const menuAddonCategoriesRow = await prisma.menuAddonCategory.findMany({
+      where: { menuId },
+    });
+    const addonCategoryIds = menuAddonCategoriesRow.map(
+      (item) => item.addonCategoryId
+    );
+
+    //check whether addonCategoryId is connected to only one menu or many menu
+    //do some logic depends on upper condition
+
     await prisma.menu.update({
       data: { isArchived: true },
       where: { id: menuId },

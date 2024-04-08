@@ -137,7 +137,13 @@ const AddonCategoryDetail = () => {
               .map((selectedMenuId) => {
                 return menus.find((item) => item.id === selectedMenuId) as Menu;
               })
-              .map((item) => <Chip label={item.name} sx={{ mr: 1 }} />);
+              .map(
+                (item) =>
+                  //for there is not exist the delete menu, check this => item !== undefined
+                  item !== undefined && (
+                    <Chip label={item.name} sx={{ mr: 1 }} />
+                  )
+              );
           }}
           MenuProps={{
             PaperProps: {

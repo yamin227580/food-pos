@@ -1,4 +1,6 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { removeAddonCategory } from "@/store/slices/addonCategorySlice";
+import { removeMenuAddonCategoryById } from "@/store/slices/menuAddonCategorySlice";
 import { deleteMenu, updateMenu } from "@/store/slices/menuSlice";
 import { UpdateMenuOptions } from "@/types/menu";
 import {
@@ -37,6 +39,10 @@ const MenuDetail = () => {
   const menuCategoryIds = currentMenuCategoryMenus.map(
     (item) => item.menuCategoryId
   );
+
+  const menuAddonCategories = useAppSelector(
+    (state) => state.menuAddonCategory.items
+  );
   const [data, setData] = useState<UpdateMenuOptions>();
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
@@ -69,7 +75,24 @@ const MenuDetail = () => {
     dispatch(
       deleteMenu({
         id: menuId,
-        onSuccess: () => router.push("/backoffice/menus"),
+        onSuccess: () => {
+          menuAddonCategories
+            .filter((item) => item.menuId === menuId)
+            .map((item) => item.addonCategoryId)
+            .forEach((addonCategoryId) => {
+              const entries = menuAddonCategories.filter(
+                (item) => item.addonCategoryId === addonCategoryId
+              );
+              if (entries.length === 1) {
+                const menuAddonCategoryId = entries[0].id;
+                dispatch(removeAddonCategory({ id: addonCategoryId }));
+                dispatch(
+                  removeMenuAddonCategoryById({ id: menuAddonCategoryId })
+                );
+              }
+            });
+          router.push("/backoffice/menus");
+        },
       })
     );
   };
