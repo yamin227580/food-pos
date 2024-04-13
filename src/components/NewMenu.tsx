@@ -1,10 +1,12 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { createMenu } from "@/store/slices/menuSlice";
 import { CreateMenuOptions } from "@/types/menu";
+import { config } from "@/utils/config";
 import {
   Box,
   Button,
   Checkbox,
+  Chip,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -18,6 +20,7 @@ import {
 } from "@mui/material";
 import { MenuCategory } from "@prisma/client";
 import { Dispatch, SetStateAction, useState } from "react";
+import FileDropZone from "./FileDropZone";
 
 interface Props {
   open: boolean;
@@ -35,21 +38,40 @@ const NewMenu = ({ open, setOpen }: Props) => {
   // 2 . new menu state
   const [newMenu, setNewMenu] = useState<CreateMenuOptions>(defaultNewMenu);
 
+  const [menuImage, setMenuImage] = useState<File>();
+
   // 3. get all menu-category from store
   const menuCategories = useAppSelector((state) => state.menuCategory.items);
   const dispatch = useAppDispatch();
 
+  const onFileSelected = (files: File[]) => {
+    setMenuImage(files[0]);
+  };
+
   // 4. Selected menu-category function
   const handleOnChange = (evt: SelectChangeEvent<number[]>) => {
     //select internally logic works adding evt value into menuCategoryIds array and remove it
-    //don't need to push and remvove from menuCategoryId array
+    //don't need to push and remvove in menuCategoryId array
     const selectedIds = evt.target.value as number[];
     setNewMenu({ ...newMenu, menuCategoryIds: selectedIds });
   };
 
   // 5. create menu
-  const handleCreateMenu = () => {
-    dispatch(createMenu({ ...newMenu, onSuccess: () => setOpen(false) }));
+  const handleCreateMenu = async () => {
+    const newMenuPayload = { ...newMenu };
+    if (menuImage) {
+      const formData = new FormData();
+      formData.append("files", menuImage);
+      const response = await fetch(`${config.apiBaseUrl}/assets`, {
+        method: "POST",
+        body: formData,
+      });
+      const { assetUrl } = await response.json();
+      newMenuPayload.assetUrl = assetUrl;
+    }
+    dispatch(
+      createMenu({ ...newMenuPayload, onSuccess: () => setOpen(false) })
+    );
   };
 
   return (
@@ -112,6 +134,16 @@ const NewMenu = ({ open, setOpen }: Props) => {
             ))}
           </Select>
         </FormControl>
+        <Box sx={{ mt: 2 }}>
+          <FileDropZone onFileSelected={onFileSelected} />
+          {menuImage && (
+            <Chip
+              sx={{ mt: 2 }}
+              label={menuImage.name}
+              onDelete={() => setMenuImage(undefined)}
+            />
+          )}
+        </Box>
         <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-end" }}>
           <Button
             variant="contained"

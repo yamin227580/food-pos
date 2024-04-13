@@ -11,10 +11,10 @@ export default async function handler(
   if (!session) return res.status(401).send("Unauthorized");
   const method = req.method;
   if (method === "POST") {
-    const { name, price, menuCategoryIds } = req.body;
+    const { name, price, assetUrl, menuCategoryIds } = req.body;
     const isValid = name && price !== undefined && menuCategoryIds.length > 0;
     if (!isValid) return res.status(400).send("Bad request.");
-    const menu = await prisma.menu.create({ data: { name, price } });
+    const menu = await prisma.menu.create({ data: { name, price, assetUrl } });
     const newMenuCategoryMenu: { menuCategoryId: number; menuId: number }[] =
       menuCategoryIds.map((item: number) => ({
         menuCategoryId: item,

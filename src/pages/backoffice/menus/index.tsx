@@ -1,7 +1,6 @@
-import ItemCard from "@/components/ItemCard";
+import MenuCard from "@/components/MenuCard";
 import NewMenu from "@/components/NewMenu";
 import { useAppSelector } from "@/store/hooks";
-import LocalDiningIcon from "@mui/icons-material/LocalDining";
 import { Box, Button } from "@mui/material";
 import { useState } from "react";
 
@@ -17,11 +16,10 @@ const MenusPage = () => {
       </Box>
       <Box sx={{ display: "flex", flexWrap: "wrap" }}>
         {menus.map((item) => (
-          <ItemCard
+          <MenuCard
             href={`/backoffice/menus/${item.id}`}
             key={item.id}
-            title={item.name}
-            icon={<LocalDiningIcon />}
+            menu={item}
           />
         ))}
       </Box>

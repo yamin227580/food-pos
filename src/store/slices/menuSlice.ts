@@ -20,12 +20,13 @@ const initialState: MenuSlice = {
 export const createMenu = createAsyncThunk(
   "menu/createMenu",
   async (options: CreateMenuOptions, thunkApi) => {
-    const { name, price, menuCategoryIds, onSuccess, onError } = options;
+    const { name, price, assetUrl, menuCategoryIds, onSuccess, onError } =
+      options;
     try {
       const response = await fetch(`${config.apiBaseUrl}/menus`, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ name, price, menuCategoryIds }),
+        body: JSON.stringify({ name, price, assetUrl, menuCategoryIds }),
       });
       const { menu, menuCategoryMenus } = await response.json();
       thunkApi.dispatch(addMenu(menu));
