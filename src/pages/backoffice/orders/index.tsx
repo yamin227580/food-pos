@@ -1,10 +1,4 @@
-import { Box, Typography } from "@mui/material";
-
-const orders = () => {
-  return (
-    <Box>
-      <Typography>Orders Page</Typography>
-    </Box>
-  );
+const order = () => {
+  return <h1>orders</h1>;
 };
-export default orders;
+export default order;

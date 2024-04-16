@@ -3,6 +3,8 @@ import { config } from "@/utils/config";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { setAddonCategories } from "./addonCategorySlice";
 import { setAddons } from "./addonSlice";
+import { setDisabledLocationMenus } from "./disableLocationMenu";
+import { setDisabledLocationMenuCategories } from "./disableLocationMenuCategorySlice";
 import { setLocations } from "./locationSlice";
 import { setMenuAddonCategories } from "./menuAddonCategorySlice";
 import { setMenuCategoryMenus } from "./menuCategoryMenuSlice";
@@ -19,9 +21,14 @@ const initialState: AppSlice = {
 export const fetchAppData = createAsyncThunk(
   "app/fetchAppData",
   async (options: GetAppDataOptions, thunkApi) => {
-    const { onSuccess, onError } = options;
+    const { companyId, tableId, onSuccess, onError } = options;
+    console.log("tableId", tableId);
     try {
-      const response = await fetch(`${config.apiBaseUrl}/app`);
+      const appDataUrl =
+        companyId && tableId
+          ? `${config.apiBaseUrl}/app?companyId=${companyId}&tableId=${tableId}`
+          : `${config.apiBaseUrl}/app`;
+      const response = await fetch(appDataUrl);
       const appData = await response.json();
       const {
         locations,
@@ -32,6 +39,8 @@ export const fetchAppData = createAsyncThunk(
         addonCategories,
         addons,
         tables,
+        disabledLocationMenuCategories,
+        disabledLocationMenus,
       } = appData;
       thunkApi.dispatch(setMenuCategories(menuCategories));
       thunkApi.dispatch(setMenus(menus));
@@ -41,7 +50,10 @@ export const fetchAppData = createAsyncThunk(
       thunkApi.dispatch(setAddons(addons));
       thunkApi.dispatch(setLocations(locations));
       thunkApi.dispatch(setTables(tables));
-
+      thunkApi.dispatch(
+        setDisabledLocationMenuCategories(disabledLocationMenuCategories)
+      );
+      thunkApi.dispatch(setDisabledLocationMenus(disabledLocationMenus));
       onSuccess && onSuccess();
 
       thunkApi.dispatch(setInit(true));

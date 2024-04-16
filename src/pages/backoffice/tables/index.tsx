@@ -8,6 +8,15 @@ import { useState } from "react";
 const MenusPage = () => {
   const [open, setOpen] = useState(false);
   const tables = useAppSelector((state) => state.table.items);
+
+  const handleQRImagePrint = (assetUrl: string) => {
+    const imageWindow = window.open("");
+    imageWindow?.document.write(
+      `<html><head><title>Print Image</title></head><body style="text-align: center;"><img src="${assetUrl}" onload="window.print();window.close()" /></body></html>`
+    );
+    imageWindow?.document.close();
+  };
+
   return (
     <Box>
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
@@ -17,12 +26,26 @@ const MenusPage = () => {
       </Box>
       <Box sx={{ display: "flex", flexWrap: "wrap" }}>
         {tables.map((item) => (
-          <ItemCard
-            href={`/backoffice/tables/${item.id}`}
-            key={item.id}
-            title={item.name}
-            icon={<TableBarIcon />}
-          />
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <ItemCard
+              href={`/backoffice/tables/${item.id}`}
+              icon={<TableBarIcon fontSize="large" />}
+              key={item.id}
+              title={item.name}
+            />
+            <Button
+              variant="contained"
+              onClick={() => handleQRImagePrint(item.assetUrl)}
+            >
+              Print QR
+            </Button>
+          </Box>
         ))}
       </Box>
       <NewTable open={open} setOpen={setOpen} />

@@ -7,6 +7,10 @@ import {
 import { config } from "@/utils/config";
 import { MenuCategory } from "@prisma/client";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {
+  addDisalbedLocationmenuCategory,
+  removeDisalbedLocationmenuCategory,
+} from "./disableLocationMenuCategorySlice";
 import { removeMenuCategoryMenu } from "./menuCategoryMenuSlice";
 
 const initialState: MenuCategorySlice = {
@@ -37,15 +41,25 @@ export const createMenuCategory = createAsyncThunk(
 export const updateMenuCategory = createAsyncThunk(
   "menuCategory/updateMenuCategory",
   async (options: UpdateMenuCategoryOptions, thunkApi) => {
-    const { id, name, onSuccess, onError } = options;
+    const { id, name, locationId, isAvailable, onSuccess, onError } = options;
     try {
       const response = await fetch(`${config.apiBaseUrl}/menu-categories`, {
         method: "PUT",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ id, name }),
+        body: JSON.stringify({ id, name, locationId, isAvailable }),
       });
-      const { menuCategory } = await response.json();
+      const { menuCategory, disabledLocationMenuCategory } =
+        await response.json();
       thunkApi.dispatch(replaceMenuCategory(menuCategory));
+      if (isAvailable === false) {
+        thunkApi.dispatch(
+          addDisalbedLocationmenuCategory(disabledLocationMenuCategory)
+        );
+      } else {
+        thunkApi.dispatch(
+          removeDisalbedLocationmenuCategory({ locationId, menuCategoryId: id })
+        );
+      }
       onSuccess && onSuccess();
     } catch (err) {
       onError && onError();

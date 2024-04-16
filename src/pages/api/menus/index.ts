@@ -30,7 +30,8 @@ export default async function handler(
     return res.status(200).json({ menu, menuCategoryMenus });
   } else if (method === "PUT") {
     //get data from request
-    const { id, name, price, menuCategoryIds } = req.body;
+    const { id, name, price, menuCategoryIds, locationId, isAvailable } =
+      req.body;
 
     //data validation
     const isValid =
@@ -62,8 +63,30 @@ export default async function handler(
       )
     );
 
+    if (locationId) {
+      if (isAvailable === false) {
+        const exist = await prisma.disabledLocationMenu.findFirst({
+          where: { menuId: id },
+        });
+        if (!exist) {
+          await prisma.disabledLocationMenu.create({
+            data: { locationId, menuId: id },
+          });
+        }
+      } else {
+        await prisma.disabledLocationMenu.deleteMany({
+          where: { locationId, menuId: id },
+        });
+      }
+    }
+    const disabledLocationMenus = await prisma.disabledLocationMenu.findMany({
+      where: { menuId: id },
+    });
+
     //return updated menu and menuCategoryMenus
-    return res.status(200).json({ menu, menuCategoryMenus });
+    return res
+      .status(200)
+      .json({ menu, menuCategoryMenus, disabledLocationMenus });
   } else if (method === "DELETE") {
     const menuId = Number(req.query.id);
     const menu = await prisma.menu.findFirst({ where: { id: menuId } });

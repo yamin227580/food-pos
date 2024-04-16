@@ -11,6 +11,8 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControlLabel,
+  Switch,
   TextField,
 } from "@mui/material";
 import { useRouter } from "next/router";
@@ -23,20 +25,42 @@ const MenuCategoryDetail = () => {
   const menuCategory = menuCategories.find(
     (item) => item.id === menuCategoryId
   );
+
   const [data, setData] = useState<UpdateMenuCategoryOptions>();
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
 
+  const disalbedLocationmenuCategories = useAppSelector(
+    (state) => state.disableLocationMenuCategory.items
+  );
   useEffect(() => {
     if (menuCategory) {
-      setData({ ...menuCategory });
+      const selectedLocationId = Number(
+        localStorage.getItem("selectedLocationId")
+      );
+      const disalbedLocationmenuCategory = disalbedLocationmenuCategories.find(
+        (item) =>
+          item.locationId === selectedLocationId &&
+          item.menuCategoryId === menuCategoryId
+      );
+
+      setData({
+        id: menuCategory.id,
+        name: menuCategory.name,
+        locationId: selectedLocationId,
+        isAvailable: disalbedLocationmenuCategory ? false : true,
+      });
     }
-  }, [menuCategory]);
+  }, [menuCategory, disalbedLocationmenuCategories]);
 
   if (!menuCategory || !data) return null;
 
   const handleUpdateMenuCategory = () => {
-    dispatch(updateMenuCategory(data));
+    dispatch(
+      updateMenuCategory({
+        ...data,
+      })
+    );
   };
 
   const handleDeleteMenuCategory = () => {
@@ -58,9 +82,16 @@ const MenuCategoryDetail = () => {
       <TextField
         defaultValue={menuCategory.name}
         sx={{ mb: 2 }}
-        onChange={(evt) =>
-          setData({ ...data, id: menuCategoryId, name: evt.target.value })
+        onChange={(evt) => setData({ ...data, name: evt.target.value })}
+      />
+      <FormControlLabel
+        control={
+          <Switch
+            defaultChecked={data.isAvailable}
+            onChange={(evt, value) => setData({ ...data, isAvailable: value })}
+          />
         }
+        label="Available"
       />
       <Button
         variant="contained"

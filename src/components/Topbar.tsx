@@ -1,7 +1,6 @@
 import { Box, Button, Typography } from "@mui/material";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
-import logo from "../assets/logo.png";
 
 const Topbar = () => {
   const { data } = useSession();
@@ -16,11 +15,7 @@ const Topbar = () => {
       }}
     >
       <Box sx={{ height: 70 }}>
-        <Image
-          src={logo}
-          alt="logo"
-          style={{ width: "100%", height: "100%" }}
-        />
+        <Image src={"/logo.png"} alt="logo" width={150} height={70} />
       </Box>
       <Box>
         <Typography variant="h5" color={"secondary"}>
@@ -31,7 +26,7 @@ const Topbar = () => {
         <Box>
           <Button
             variant="contained"
-            onClick={() => signOut({ callbackUrl: "/" })}
+            onClick={() => signOut({ callbackUrl: "/backoffice" })}
           >
             Sign Out
           </Button>

@@ -23,6 +23,8 @@ export interface UpdateMenuOptions extends BaseOptions {
   name: string;
   price: number;
   menuCategoryIds: number[];
+  locationId: number;
+  isAvailable: boolean;
 }
 
 export interface DeleteMenuOptions extends BaseOptions {
