@@ -7,8 +7,8 @@ import {
 import { config } from "@/utils/config";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
-  addDisalbedLocationMenu,
   removeDisalbedLocationMenu,
+  setDisabledLocationMenus,
 } from "./disableLocationMenu";
 import {
   addMenuCategoryMenu,
@@ -73,7 +73,7 @@ export const updateMenu = createAsyncThunk(
       thunkApi.dispatch(replaceMenu(menu));
       thunkApi.dispatch(replaceMenuCategoryMenu(menuCategoryMenus));
       if (isAvailable === false) {
-        thunkApi.dispatch(addDisalbedLocationMenu(disabledLocationMenus));
+        thunkApi.dispatch(setDisabledLocationMenus(disabledLocationMenus));
       } else {
         thunkApi.dispatch(
           removeDisalbedLocationMenu({ locationId, menuId: id })

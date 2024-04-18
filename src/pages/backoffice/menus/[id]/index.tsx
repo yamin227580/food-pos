@@ -71,7 +71,7 @@ const MenuDetail = () => {
         isAvailable: disalbedLocationMenu ? false : true,
       });
     }
-  }, [currentMenu]);
+  }, [currentMenu, disabledLocationMenus]);
 
   if (!currentMenu || !data) return null;
 
