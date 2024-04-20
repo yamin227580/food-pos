@@ -1,4 +1,5 @@
-import { useAppSelector } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { setSelectedLocation } from "@/store/slices/locationSlice";
 import {
   Box,
   FormControl,
@@ -12,19 +13,27 @@ import { useEffect, useState } from "react";
 const SettingsPage = () => {
   const locations = useAppSelector((state) => state.location.items);
   const [locationId, setLocationId] = useState<number>();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (locations.length) {
       const selectedLocationId = localStorage.getItem("selectedLocationId");
       if (selectedLocationId) {
         setLocationId(Number(selectedLocationId));
+        const locaton = locations.find(
+          (item) => item.id === Number(selectedLocationId)
+        );
+        if (locaton) {
+          dispatch(setSelectedLocation(locaton));
+        }
       } else {
         const firstLocationId = locations[0].id;
         setLocationId(Number(firstLocationId));
         localStorage.setItem("selectedLocationId", String(firstLocationId));
+        dispatch(setSelectedLocation(locations[0]));
       }
     }
-  }, [locations]);
+  }, [locations, locationId]);
 
   const handleLocationChange = (evt: SelectChangeEvent<number>) => {
     localStorage.setItem("selectedLocationId", String(evt.target.value));

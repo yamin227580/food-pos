@@ -1,18 +1,74 @@
 import AddonCategories from "@/components/AddonCategories";
 import QuantitySelector from "@/components/QuantitySelector";
-import { useAppSelector } from "@/store/hooks";
-import { Box } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { addToCart } from "@/store/slices/cartSlice";
+import { CartItem } from "@/types/cart";
+import { generateRandomId } from "@/utils/general";
+import { Box, Button } from "@mui/material";
+import { Addon } from "@prisma/client";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const MenuDetail = () => {
-  const { query, isReady } = useRouter();
+  const { query, isReady, ...router } = useRouter();
   const menuId = Number(query.id);
+  const cartItemId = query.cartItemId;
   const menus = useAppSelector((state) => state.menu.items);
+  const cartItems = useAppSelector((state) => state.cart.items);
   const menu = menus.find((item) => item.id === menuId);
   const [quantity, setQuantity] = useState(1);
-  const [selectedAddonIds, setSelectedAddonIds] = useState<number[]>([]);
+  const [isDisabled, setIsDisabled] = useState(true);
+  const [selectedAddons, setSelectedAddons] = useState<Addon[]>([]);
+  const dispatch = useAppDispatch();
+
+  const cartItem = cartItems.find((item) => item.id === cartItemId);
+
+  const allMenuAddonCategories = useAppSelector(
+    (state) => state.menuAddonCategory.items
+  );
+  const addonCategoryIds = allMenuAddonCategories
+    .filter((item) => item.menuId === menuId)
+    .map((item) => item.addonCategoryId);
+  const addonCategories = useAppSelector(
+    (state) => state.addonCategory.items
+  ).filter((item) => addonCategoryIds.includes(item.id));
+
+  useEffect(() => {
+    const requiredAddonCategories = addonCategories.filter(
+      (item) => item.isRequired
+    );
+    const selectedRequiredAddons = selectedAddons.filter((selectedAddon) => {
+      const addonCategory = addonCategories.find(
+        (item) => item.id === selectedAddon.addonCategoryId
+      );
+      return addonCategory?.isRequired ? true : false;
+    });
+    const isDisabled =
+      requiredAddonCategories.length !== selectedRequiredAddons.length;
+    setIsDisabled(isDisabled);
+  }, [selectedAddons, addonCategories]);
+
+  useEffect(() => {
+    if (cartItem) {
+      const { quantity, addons } = cartItem;
+      setSelectedAddons(addons);
+      setQuantity(quantity);
+    }
+  }, [cartItem]);
+
+  const handleAddToCart = () => {
+    if (!menu) return;
+    const newCartItem: CartItem = {
+      id: cartItem ? cartItem.id : generateRandomId(),
+      menu,
+      addons: selectedAddons,
+      quantity,
+    };
+    dispatch(addToCart(newCartItem));
+    const pathname = cartItem ? "/order/cart" : "/order";
+    router.push({ pathname, query });
+  };
 
   const handleQuantityDecrease = () => {
     const newValue = quantity - 1 === 0 ? 1 : quantity - 1;
@@ -27,7 +83,7 @@ const MenuDetail = () => {
   if (!isReady || !menu) return null;
 
   return (
-    <Box>
+    <Box sx={{ position: "relative", zIndex: 5 }}>
       <Box
         sx={{
           display: "flex",
@@ -55,15 +111,26 @@ const MenuDetail = () => {
           }}
         >
           <AddonCategories
-            menuId={menuId}
-            selectedAddonIds={selectedAddonIds}
-            setSelectedAddonIds={setSelectedAddonIds}
+            addonCategories={addonCategories}
+            selectedAddons={selectedAddons}
+            setSelectedAddons={setSelectedAddons}
           />
           <QuantitySelector
             value={quantity}
             onDecrease={handleQuantityDecrease}
             onIncrease={handleQuantityIncrease}
           />
+          <Button
+            variant="contained"
+            disabled={isDisabled}
+            onClick={handleAddToCart}
+            sx={{
+              width: "fit-content",
+              mt: 3,
+            }}
+          >
+            {cartItem ? "Update Cart" : "Add to Cart"}
+          </Button>
         </Box>
       </Box>
     </Box>

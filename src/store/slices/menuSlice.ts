@@ -120,8 +120,12 @@ const menuSlice = createSlice({
     removeMenu: (state, action) => {
       state.items = state.items.filter((item) => item.id !== action.payload.id);
     },
+    setLoadingMenu: (state, action) => {
+      state.isLoading = action.payload;
+    },
   },
 });
 
-export const { setMenus, addMenu, replaceMenu, removeMenu } = menuSlice.actions;
+export const { setMenus, addMenu, replaceMenu, removeMenu, setLoadingMenu } =
+  menuSlice.actions;
 export default menuSlice.reducer;

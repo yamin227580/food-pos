@@ -4,6 +4,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState: LocationSlice = {
   items: [],
+  selectedLocation: null,
   isLoading: false,
   error: null,
 };
@@ -37,7 +38,18 @@ const locationSlice = createSlice({
       if (!selectedLocationId) {
         const firstLocationId = action.payload[0].id;
         localStorage.setItem("selectedLocationId", firstLocationId);
+        state.selectedLocation = action.payload[0];
+      } else {
+        const location = state.items.find(
+          (item) => item.id === Number(selectedLocationId)
+        );
+        if (location) {
+          state.selectedLocation = location;
+        }
       }
+    },
+    setSelectedLocation: (state, action) => {
+      state.selectedLocation = action.payload;
     },
     addLocation: (state, action) => {
       state.items = [...state.items, action.payload];
@@ -45,5 +57,6 @@ const locationSlice = createSlice({
   },
 });
 
-export const { setLocations, addLocation } = locationSlice.actions;
+export const { setLocations, addLocation, setSelectedLocation } =
+  locationSlice.actions;
 export default locationSlice.reducer;

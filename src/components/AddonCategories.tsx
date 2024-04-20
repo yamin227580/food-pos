@@ -1,29 +1,19 @@
-import { useAppSelector } from "@/store/hooks";
 import { Box, Chip, Typography } from "@mui/material";
+import { Addon, AddonCategory } from "@prisma/client";
 import { Dispatch, SetStateAction } from "react";
 import Addons from "./Addons";
 
 interface Props {
-  menuId: number;
-  selectedAddonIds: number[];
-  setSelectedAddonIds: Dispatch<SetStateAction<number[]>>;
+  addonCategories: AddonCategory[];
+  selectedAddons: Addon[];
+  setSelectedAddons: Dispatch<SetStateAction<Addon[]>>;
 }
 
 const AddonCategories = ({
-  menuId,
-  selectedAddonIds,
-  setSelectedAddonIds,
+  addonCategories,
+  selectedAddons,
+  setSelectedAddons,
 }: Props) => {
-  const allMenuAddonCategories = useAppSelector(
-    (state) => state.menuAddonCategory.items
-  );
-  const addonCategoryIds = allMenuAddonCategories
-    .filter((item) => item.menuId === menuId)
-    .map((item) => item.addonCategoryId);
-  const addonCategories = useAppSelector(
-    (state) => state.addonCategory.items
-  ).filter((item) => addonCategoryIds.includes(item.id));
-
   return (
     <Box>
       {addonCategories.map((item) => {
@@ -44,8 +34,8 @@ const AddonCategories = ({
             <Box sx={{ pl: 1, mt: 2 }}>
               <Addons
                 addonCategoryId={item.id}
-                selectedAddonIds={selectedAddonIds}
-                setSelectedAddonIds={setSelectedAddonIds}
+                selectedAddons={selectedAddons}
+                setSelectedAddons={setSelectedAddons}
               />
             </Box>
           </Box>

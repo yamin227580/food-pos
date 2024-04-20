@@ -24,21 +24,20 @@ export const fileUpload = multer({
   }),
 }).array("files", 1);
 
-export const generateLinkForQRCode = (companyId: number, tableId: number) => {
-  return `${config.orderAppUrl}?companyId=${companyId}&tableId=${tableId}`;
+export const generateLinkForQRCode = (tableId: number) => {
+  return `${config.orderAppUrl}?tableId=${tableId}`;
 };
 
-export const qrCodeImageUpload = async (companyId: number, tableId: number) => {
+export const qrCodeImageUpload = async (tableId: number) => {
   try {
     //scale is the size of qr image and its default is 4
-    const qrImageData = await QRCode.toDataURL(
-      generateLinkForQRCode(companyId, tableId),
-      { scale: 20 }
-    );
+    const qrImageData = await QRCode.toDataURL(generateLinkForQRCode(tableId), {
+      scale: 20,
+    });
 
     const input = {
       Bucket: "msquarefdc",
-      Key: `foodie-pos/nilar/qrcode/companyId-${companyId}-tableId-${tableId}.png`,
+      Key: `foodie-pos/nilar/qrcode/tableId-${tableId}.png`,
       ACL: "public-read",
       Body: Buffer.from(
         qrImageData.replace(/^data:image\/\w+;base64,/, ""),
@@ -53,6 +52,6 @@ export const qrCodeImageUpload = async (companyId: number, tableId: number) => {
   }
 };
 
-export const getQrCodeUrl = (companyId: number, tableId: number) => {
-  return `https://msquarefdc.sgp1.cdn.digitaloceanspaces.com/foodie-pos/nilar/qrcode/companyId-${companyId}-tableId-${tableId}.png`;
+export const getQrCodeUrl = (tableId: number) => {
+  return `https://msquarefdc.sgp1.cdn.digitaloceanspaces.com/foodie-pos/nilar/qrcode/tableId-${tableId}.png`;
 };

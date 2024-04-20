@@ -14,8 +14,6 @@ export default function handler(req: Request, res: Response) {
   try {
     fileUpload(req, res, (error) => {
       if (error) {
-        console.log("here one");
-        console.log(error);
         return res.status(500).send("Internal Server Error");
       }
       const files = req.files as Express.MulterS3.File[];
@@ -24,7 +22,6 @@ export default function handler(req: Request, res: Response) {
       res.status(200).json({ assetUrl });
     });
   } catch (err) {
-    console.log("here two");
     res.status(500).send("Internal Server Error");
   }
 }

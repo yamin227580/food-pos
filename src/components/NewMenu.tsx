@@ -1,7 +1,9 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { createMenu } from "@/store/slices/menuSlice";
+import { createMenu, setLoadingMenu } from "@/store/slices/menuSlice";
 import { CreateMenuOptions } from "@/types/menu";
 import { config } from "@/utils/config";
+import SaveIcon from "@mui/icons-material/Save";
+import LoadingButton from "@mui/lab/LoadingButton";
 import {
   Box,
   Button,
@@ -42,6 +44,7 @@ const NewMenu = ({ open, setOpen }: Props) => {
 
   // 3. get all menu-category from store
   const menuCategories = useAppSelector((state) => state.menuCategory.items);
+  const { isLoading } = useAppSelector((state) => state.menu);
   const dispatch = useAppDispatch();
 
   const onFileSelected = (files: File[]) => {
@@ -58,6 +61,7 @@ const NewMenu = ({ open, setOpen }: Props) => {
 
   // 5. create menu
   const handleCreateMenu = async () => {
+    dispatch(setLoadingMenu(true));
     const newMenuPayload = { ...newMenu };
     if (menuImage) {
       const formData = new FormData();
@@ -70,7 +74,13 @@ const NewMenu = ({ open, setOpen }: Props) => {
       newMenuPayload.assetUrl = assetUrl;
     }
     dispatch(
-      createMenu({ ...newMenuPayload, onSuccess: () => setOpen(false) })
+      createMenu({
+        ...newMenuPayload,
+        onSuccess: () => {
+          setOpen(false);
+          dispatch(setLoadingMenu(false));
+        },
+      })
     );
   };
 
@@ -152,13 +162,16 @@ const NewMenu = ({ open, setOpen }: Props) => {
           >
             Cancel
           </Button>
-          <Button
+          <LoadingButton
+            loading={isLoading}
+            loadingPosition="start"
+            startIcon={<SaveIcon />}
             variant="contained"
             disabled={!newMenu.name || !newMenu.menuCategoryIds.length}
             onClick={handleCreateMenu}
           >
             Confirm
-          </Button>
+          </LoadingButton>
         </Box>
       </DialogContent>
     </Dialog>

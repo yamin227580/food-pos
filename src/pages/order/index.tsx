@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 const OrderApp = () => {
   const { isReady, ...router } = useRouter();
   const query = router.query;
-  const companyId = query.companyId as string;
+  const tableId = query.tableId as string;
   const menuCategories = useAppSelector((state) => state.menuCategory.items);
   const menuCategoryMenus = useAppSelector(
     (state) => state.menuCategoryMenu.items
@@ -27,7 +27,7 @@ const OrderApp = () => {
   }, [menuCategories]);
 
   useEffect(() => {
-    if (isReady && !companyId) {
+    if (isReady && !tableId) {
       router.push("/");
     }
   }, [isReady]);
@@ -44,7 +44,7 @@ const OrderApp = () => {
   };
 
   return (
-    <Box>
+    <Box sx={{ position: "relative", zIndex: 5 }}>
       <Box>
         <Tabs
           TabIndicatorProps={{

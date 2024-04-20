@@ -10,20 +10,28 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const method = req.method;
-  const { companyId } = req.query;
   const { tableId } = req.query;
-  const isOrderAppRequest = companyId && tableId;
-  console.log(companyId, tableId);
-  console.log("isOrderAppRequest", isOrderAppRequest);
+  const isOrderAppRequest = tableId;
+
   if (method === "GET") {
     if (isOrderAppRequest) {
+      const table = await prisma.table.findFirst({
+        where: { id: Number(tableId) },
+      });
+      const location = await prisma.location.findFirst({
+        where: { id: table?.locationId },
+      });
+      const companyId = location?.companyId;
       let menuCategories = await prisma.menuCategory.findMany({
         where: { companyId: Number(companyId), isArchived: false },
       });
       const menuCategoryIds = menuCategories.map((item) => item.id);
       const disabledMenuCategoryIds = (
         await prisma.disabledLocationMenuCategory.findMany({
-          where: { menuCategoryId: { in: menuCategoryIds } },
+          where: {
+            menuCategoryId: { in: menuCategoryIds },
+            locationId: location?.id,
+          },
         })
       ).map((item) => item.menuCategoryId);
 
@@ -37,7 +45,7 @@ export default async function handler(
       const menuIds = menuCategoryMenus.map((item) => item.menuId);
       const disabledMenuIds = (
         await prisma.disabledLocationMenu.findMany({
-          where: { menuId: { in: menuIds } },
+          where: { menuId: { in: menuIds }, locationId: location?.id },
         })
       ).map((item) => item.menuId);
       const menus = (
@@ -147,8 +155,8 @@ export default async function handler(
         let table = await prisma.table.create({
           data: { name: newTableName, locationId: location.id, assetUrl: "" },
         });
-        await qrCodeImageUpload(company.id, table.id);
-        const assetUrl = getQrCodeUrl(company.id, table.id);
+        await qrCodeImageUpload(table.id);
+        const assetUrl = getQrCodeUrl(table.id);
         table = await prisma.table.update({
           data: { assetUrl },
           where: { id: table.id },
