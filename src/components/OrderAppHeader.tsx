@@ -41,7 +41,7 @@ const OrderAppHeader = ({ cartItemCount }: Props) => {
             onClick={() =>
               router.push({
                 pathname: "/order",
-                query: router.query,
+                query: { tableId: router.query.tableId },
               })
             }
             sx={{
@@ -53,7 +53,10 @@ const OrderAppHeader = ({ cartItemCount }: Props) => {
           <>
             <ShoppingCartCheckoutIcon
               onClick={() =>
-                router.push({ pathname: "/order/cart", query: router.query })
+                router.push({
+                  pathname: "/order/cart",
+                  query: { tableId: router.query.tableId },
+                })
               }
               sx={{
                 fontSize: "40px",

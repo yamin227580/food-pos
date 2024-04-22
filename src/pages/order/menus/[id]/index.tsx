@@ -67,7 +67,10 @@ const MenuDetail = () => {
     };
     dispatch(addToCart(newCartItem));
     const pathname = cartItem ? "/order/cart" : "/order";
-    router.push({ pathname, query });
+    router.push({
+      pathname,
+      query: { tableId: query.tableId },
+    });
   };
 
   const handleQuantityDecrease = () => {

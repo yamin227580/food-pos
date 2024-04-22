@@ -29,13 +29,22 @@ export default async function handler(
     );
     return res.status(200).json({ menu, menuCategoryMenus });
   } else if (method === "PUT") {
-    const { id, name, price, menuCategoryIds, locationId, isAvailable } =
-      req.body;
+    const {
+      id,
+      name,
+      price,
+      menuCategoryIds,
+      locationId,
+      isAvailable,
+      assetUrl,
+    } = req.body;
     const isValid =
       id && name && price !== undefined && menuCategoryIds.length > 0;
     if (!isValid) return res.status(400).send("Bad request.");
+    const exist = await prisma.menu.findFirst({ where: { id } });
+    if (!exist) return res.status(400).send("Bad request.");
     const menu = await prisma.menu.update({
-      data: { name, price },
+      data: { name, price, assetUrl },
       where: { id },
     });
     // update menuCategoryMenu table

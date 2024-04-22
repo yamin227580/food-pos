@@ -3,6 +3,7 @@ import { removeAddonCategory } from "@/store/slices/addonCategorySlice";
 import { removeMenuAddonCategoryById } from "@/store/slices/menuAddonCategorySlice";
 import { deleteMenu, updateMenu } from "@/store/slices/menuSlice";
 import { UpdateMenuOptions } from "@/types/menu";
+import { config } from "@/utils/config";
 import {
   Box,
   Button,
@@ -23,8 +24,9 @@ import {
   TextField,
 } from "@mui/material";
 import { MenuCategory } from "@prisma/client";
+import Image from "next/image";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
 const MenuDetail = () => {
   const router = useRouter();
@@ -86,6 +88,21 @@ const MenuDetail = () => {
     dispatch(updateMenu(data));
   };
 
+  const handleMenuImageUpdate = async (evt: ChangeEvent<HTMLInputElement>) => {
+    const files = evt.target.files;
+    if (files) {
+      const file = files[0];
+      const formData = new FormData();
+      formData.append("files", file);
+      const response = await fetch(`${config.apiBaseUrl}/assets`, {
+        method: "POST",
+        body: formData,
+      });
+      const { assetUrl } = await response.json();
+      dispatch(updateMenu({ ...data, assetUrl }));
+    }
+  };
+
   const handleDeleteMenu = () => {
     dispatch(
       deleteMenu({
@@ -117,6 +134,30 @@ const MenuDetail = () => {
       <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
         <Button variant="outlined" color="error" onClick={() => setOpen(true)}>
           Delete
+        </Button>
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          mb: 4,
+        }}
+      >
+        <Image
+          src={currentMenu.assetUrl || "/default-menu.png"}
+          alt="menu-image"
+          width={150}
+          height={150}
+          style={{ borderRadius: 8 }}
+        />
+        <Button
+          variant="outlined"
+          component="label"
+          sx={{ width: "fit-content", mt: 2 }}
+        >
+          Upload File
+          <input type="file" hidden onChange={handleMenuImageUpdate} />
         </Button>
       </Box>
       <TextField

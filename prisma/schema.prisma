@@ -71,7 +71,7 @@ model Menu {
   disabledLocationMenu DisabledLocationMenu[]
   menuCategoryMenu     MenuCategoryMenu[]
   menuAddonCategory    MenuAddonCategory[]
-  orderlines            Orderline[]
+  orders            Order[]
   isArchived           Boolean                @default(false)
   createdAt            DateTime               @default(now())
   updatedAt            DateTime               @updatedAt
@@ -127,7 +127,7 @@ model Addon {
   price           Int           @default(0)
   addonCategory   AddonCategory @relation(fields: [addonCategoryId], references: [id])
   addonCategoryId Int
-  orderlines       Orderline[]
+  orders       Order[]
   isArchived      Boolean       @default(false)
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
@@ -135,29 +135,19 @@ model Addon {
 
 model Order {
   id         Int         @id @default(autoincrement())
+  menu       Menu        @relation(fields: [menuId], references: [id])
+  menuId     Int
+  addon      Addon?       @relation(fields: [addonId], references: [id])
+  addonId    Int?
+  quantity   Int
+  orderSeq   String
   status     ORDERSTATUS
   totalPrice Int
-  orderlines Orderline[]
   table      Table       @relation(fields: [tableId], references: [id])
   tableId    Int
   isArchived Boolean     @default(false)
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
-}
-
-model Orderline {
-  id         Int      @id @default(autoincrement())
-  order      Order    @relation(fields: [orderId], references: [id])
-  orderId    Int
-  menu       Menu     @relation(fields: [menuId], references: [id])
-  menuId     Int
-  addon      Addon    @relation(fields: [addonId], references: [id])
-  addonId    Int
-  quantity   Int
-  orderSeq   String
-  isArchived Boolean  @default(false)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
 }
 
 model Table {
@@ -184,8 +174,7 @@ model User {
 }
 
 enum ORDERSTATUS {
-  ORDERED
-  OUTFORDELIVERY
-  DELIVERED
-  CANCELLED
+  PENDING
+  COOKING
+  COMPLETE
 }
