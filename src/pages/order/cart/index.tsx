@@ -17,12 +17,6 @@ const Cart = () => {
   const tableId = Number(router.query.tableId);
   const dispatch = useAppDispatch();
 
-  // useEffect(() => {
-  //   if (!cartItems.length) {
-  //     router.push({ pathname: "/order", query: router.query });
-  //   }
-  // }, [cartItems]);
-
   const renderAddons = (addons: Addon[]) => {
     if (!addons.length) return;
     return addons.map((item) => {

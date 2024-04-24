@@ -20,7 +20,7 @@ const MenuCategoriesPage = () => {
       </Box>
       <Box sx={{ display: "flex", flexWrap: "wrap" }}>
         {menuCategories.map((item) => {
-          const exist = disalbedLocationmenuCategories.find(
+          const exist = disalbedLocationmenuCategories?.find(
             (disalbedLocationmenuCategory) =>
               disalbedLocationmenuCategory.locationId ===
                 Number(localStorage.getItem("selectedLocationId")) &&

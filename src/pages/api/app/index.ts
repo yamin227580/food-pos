@@ -68,6 +68,12 @@ export default async function handler(
           isArchived: false,
         },
       });
+      const tableIds = (
+        await prisma.table.findMany({ where: { locationId: location?.id } })
+      ).map((item) => item.id);
+      const orders = await prisma.order.findMany({
+        where: { tableId: { in: tableIds } },
+      });
       return res.status(200).json({
         locations: [],
         menuCategories,
@@ -79,6 +85,7 @@ export default async function handler(
         tables: [],
         disabledLocationMenuCategories: [],
         disabledLocationMenus: [],
+        orders,
       });
     } else {
       const session = await getServerSession(req, res, authOptions);
@@ -171,6 +178,7 @@ export default async function handler(
           addons,
           locations: [location],
           tables: [table],
+          orders: [],
         });
       } else {
         // 1. get company id from current user
@@ -226,6 +234,10 @@ export default async function handler(
           where: { locationId: { in: locationIds }, isArchived: false },
         });
 
+        const orders = await prisma.order.findMany({
+          where: { tableId: { in: tables.map((item) => item.id) } },
+        });
+
         const disabledLocationMenuCategories =
           await prisma.disabledLocationMenuCategory.findMany({
             where: {
@@ -246,6 +258,7 @@ export default async function handler(
           tables,
           disabledLocationMenuCategories,
           disabledLocationMenus,
+          orders,
         });
       }
     }

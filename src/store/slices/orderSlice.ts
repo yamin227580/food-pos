@@ -1,4 +1,8 @@
-import { CreateOrderOptions, OrderSlice } from "@/types/order";
+import {
+  CreateOrderOptions,
+  OrderSlice,
+  UpdateOrderOptions,
+} from "@/types/order";
 import { config } from "@/utils/config";
 import { Order } from "@prisma/client";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
@@ -28,15 +32,42 @@ export const createOrder = createAsyncThunk(
   }
 );
 
+export const updateOrder = createAsyncThunk(
+  "order/updateOrder",
+  async (options: UpdateOrderOptions, thunkApi) => {
+    const { itemId, status, onSuccess, onError } = options;
+    try {
+      thunkApi.dispatch(setIsLoading(true));
+      const response = await fetch(
+        `${config.apiBaseUrl}/orders?itemId=${itemId}`,
+        {
+          method: "PUT",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ status }),
+        }
+      );
+      const { orders } = await response.json();
+      thunkApi.dispatch(setOrders(orders));
+      thunkApi.dispatch(setIsLoading(false));
+      onSuccess && onSuccess(orders);
+    } catch (err) {
+      onError && onError();
+    }
+  }
+);
+
 const orderSlice = createSlice({
   name: "order",
   initialState,
   reducers: {
+    setIsLoading: (state, action: PayloadAction<boolean>) => {
+      state.isLoading = action.payload;
+    },
     setOrders: (state, action: PayloadAction<Order[]>) => {
-      state.items = [...state.items, ...action.payload];
+      state.items = action.payload;
     },
   },
 });
 
-export const { setOrders } = orderSlice.actions;
+export const { setOrders, setIsLoading } = orderSlice.actions;
 export default orderSlice.reducer;
