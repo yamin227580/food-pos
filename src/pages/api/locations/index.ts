@@ -16,12 +16,12 @@ export default async function handler(
     const dbUser = await prisma.user.findUnique({ where: { email } });
     if (!dbUser) return res.status(401).send("Unauthorized.");
     const companyId = dbUser.companyId;
-    const { name, address } = req.body;
+    const { name, street, township, city } = req.body;
     // data validation
-    const isValid = name && address;
+    const isValid = name && street && township && city;
     if (!isValid) return res.status(400).send("Bad request.");
     const createdLocation = await prisma.location.create({
-      data: { name, address, companyId },
+      data: { name, street, township, city, companyId },
     });
     return res.status(200).json(createdLocation);
   }

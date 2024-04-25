@@ -1,6 +1,6 @@
 import { CartItem } from "@/types/cart";
 import { OrderAddon, OrderItem } from "@/types/order";
-import { Addon, Order } from "@prisma/client";
+import { Addon, Menu, Order, Table } from "@prisma/client";
 
 export const getCartTotalPrice = (cart: CartItem[]) => {
   const totalPrice = cart.reduce((prev, curr) => {
@@ -15,7 +15,12 @@ export const getCartTotalPrice = (cart: CartItem[]) => {
   return totalPrice;
 };
 
-export const formatOrders = (orders: Order[], addons: Addon[]): OrderItem[] => {
+export const formatOrders = (
+  orders: Order[],
+  addons: Addon[],
+  menus: Menu[],
+  tables: Table[]
+): OrderItem[] => {
   const orderItemIds: string[] = [];
   orders.forEach((order) => {
     const itemId = order.itemId;
@@ -64,7 +69,14 @@ export const formatOrders = (orders: Order[], addons: Addon[]): OrderItem[] => {
       orderAddons: orderAddons.sort(
         (a, b) => a.addonCategoryId - b.addonCategoryId
       ),
+      menu: menus.find((item) => item.id === currentOrders[0].menuId) as Menu,
+      table: tables.find(
+        (item) => item.id === currentOrders[0].tableId
+      ) as Table,
     };
   });
   return orderItems.sort((a, b) => a.itemId.localeCompare(b.itemId));
 };
+
+//localeCompare is used when the string is compared
+//a - b is used when the number is compared

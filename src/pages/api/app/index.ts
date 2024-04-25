@@ -22,6 +22,9 @@ export default async function handler(
         where: { id: table?.locationId },
       });
       const companyId = location?.companyId;
+      const company = await prisma.company.findFirst({
+        where: { id: companyId },
+      });
       let menuCategories = await prisma.menuCategory.findMany({
         where: { companyId: Number(companyId), isArchived: false },
       });
@@ -86,6 +89,7 @@ export default async function handler(
         disabledLocationMenuCategories: [],
         disabledLocationMenus: [],
         orders,
+        company,
       });
     } else {
       const session = await getServerSession(req, res, authOptions);
@@ -96,9 +100,16 @@ export default async function handler(
       if (!dbUser) {
         // 1. create new company for user and assign user to it.
         const newCompanyName = "Ah Wa Sarr";
-        const newCompanyAddress = "Hintada Street 21, Sanchaung, Yangon";
+        const newCompanyStreet = "Hintada Street 21";
+        const newCompanyTownship = "Sanchaung";
+        const newCompanyCity = "Yangon";
         const company = await prisma.company.create({
-          data: { name: newCompanyName, address: newCompanyAddress },
+          data: {
+            name: newCompanyName,
+            street: newCompanyStreet,
+            township: newCompanyTownship,
+            city: newCompanyCity,
+          },
         });
 
         // 2. create new user
@@ -149,10 +160,15 @@ export default async function handler(
 
         // 9. create new location
         const newLocationName = "Sanchaung";
+        const newLocationStreet = "Hinthada Street, 21";
+        const newLocationTownship = "Sanchaung";
+        const newLocationCity = "Yangon";
         const location = await prisma.location.create({
           data: {
             name: newLocationName,
-            address: newCompanyAddress,
+            street: newLocationStreet,
+            township: newLocationTownship,
+            city: newLocationCity,
             companyId: company.id,
           },
         });
@@ -179,10 +195,15 @@ export default async function handler(
           locations: [location],
           tables: [table],
           orders: [],
+          company,
         });
       } else {
         // 1. get company id from current user
         const companyId = dbUser.companyId;
+
+        const company = await prisma.company.findFirst({
+          where: { id: companyId },
+        });
 
         // 3.find locations
         const locations = await prisma.location.findMany({
@@ -259,6 +280,7 @@ export default async function handler(
           disabledLocationMenuCategories,
           disabledLocationMenus,
           orders,
+          company,
         });
       }
     }

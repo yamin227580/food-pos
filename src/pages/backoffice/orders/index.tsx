@@ -4,14 +4,18 @@ import { updateOrder } from "@/store/slices/orderSlice";
 import { OrderItem } from "@/types/order";
 import { formatOrders } from "@/utils/general";
 
-import { Box } from "@mui/material";
+import { Box, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { ORDERSTATUS } from "@prisma/client";
 import { useEffect, useState } from "react";
 
 const OrdersPage = () => {
   const orders = useAppSelector((state) => state.order.items);
   const addons = useAppSelector((state) => state.addon.items);
+  const menus = useAppSelector((state) => state.menu.items);
+  const tables = useAppSelector((state) => state.table.items);
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
+  const [filterOrders, setFilterOrders] = useState<OrderItem[]>([]);
+  const [value, setValue] = useState<ORDERSTATUS>(ORDERSTATUS.PENDING);
   const dispatch = useAppDispatch();
 
   const handleOrderStatuUpdate = (itemId: string, status: ORDERSTATUS) => {
@@ -19,23 +23,57 @@ const OrdersPage = () => {
   };
 
   useEffect(() => {
+    if (value) {
+      const formattedOrders = formatOrders(
+        orders,
+        addons,
+        menus,
+        tables
+      ).filter((item) => item.status === value);
+      setFilterOrders(formattedOrders);
+    }
+  }, [orders, value]);
+
+  useEffect(() => {
     if (orders.length) {
-      setOrderItems(formatOrders(orders, addons));
+      setOrderItems(formatOrders(orders, addons, menus, tables));
     }
   }, [orders]);
 
   return (
-    <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-      {orderItems.map((orderItem) => {
-        return (
-          <OrderCard
-            key={orderItem.itemId}
-            orderItem={orderItem}
-            isAdmin
-            handleOrderStatuUpdate={handleOrderStatuUpdate}
-          />
-        );
-      })}
+    <Box>
+      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <ToggleButtonGroup
+          color="primary"
+          value={value}
+          exclusive
+          onChange={(evt, value) => {
+            setValue(value);
+          }}
+        >
+          <ToggleButton value={ORDERSTATUS.PENDING}>
+            {ORDERSTATUS.PENDING}
+          </ToggleButton>
+          <ToggleButton value={ORDERSTATUS.COOKING}>
+            {ORDERSTATUS.COOKING}
+          </ToggleButton>
+          <ToggleButton value={ORDERSTATUS.COMPLETE}>
+            {ORDERSTATUS.COMPLETE}
+          </ToggleButton>
+        </ToggleButtonGroup>
+      </Box>
+      <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+        {filterOrders.map((orderItem) => {
+          return (
+            <OrderCard
+              key={orderItem.itemId}
+              orderItem={orderItem}
+              isAdmin
+              handleOrderStatuUpdate={handleOrderStatuUpdate}
+            />
+          );
+        })}
+      </Box>
     </Box>
   );
 };

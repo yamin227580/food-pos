@@ -1,13 +1,17 @@
 import ItemCard from "@/components/ItemCard";
 import NewLocation from "@/components/NewLocation";
-import { useAppSelector } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { setSelectedLocation } from "@/store/slices/locationSlice";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { Box, Button } from "@mui/material";
 import { useState } from "react";
 
 const LocationPage = () => {
   const [open, setOpen] = useState(false);
-  const locations = useAppSelector((state) => state.location.items);
+  const { items: locations, selectedLocation } = useAppSelector(
+    (state) => state.location
+  );
+  const dispatch = useAppDispatch();
   return (
     <Box>
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
@@ -17,7 +21,13 @@ const LocationPage = () => {
       </Box>
       <Box sx={{ display: "flex", flexWrap: "wrap" }}>
         {locations.map((item) => (
-          <ItemCard key={item.id} icon={<LocationOnIcon />} title={item.name} />
+          <ItemCard
+            key={item.id}
+            icon={<LocationOnIcon />}
+            title={item.name}
+            selected={item.id === selectedLocation?.id}
+            onClick={() => dispatch(setSelectedLocation(item))}
+          />
         ))}
       </Box>
       <NewLocation open={open} setOpen={setOpen} />

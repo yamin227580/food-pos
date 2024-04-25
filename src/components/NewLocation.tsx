@@ -16,7 +16,12 @@ interface Props {
 }
 
 const NewLocation = ({ open, setOpen }: Props) => {
-  const [newLocation, setNewLocation] = useState({ name: "", address: "" });
+  const [newLocation, setNewLocation] = useState({
+    name: "",
+    street: "",
+    township: "",
+    city: "",
+  });
   const dispatch = useAppDispatch();
 
   return (
@@ -43,9 +48,24 @@ const NewLocation = ({ open, setOpen }: Props) => {
             }
           />
           <TextField
-            placeholder="Address"
+            placeholder="Street"
+            sx={{ mb: 2 }}
             onChange={(evt) =>
-              setNewLocation({ ...newLocation, address: evt.target.value })
+              setNewLocation({ ...newLocation, street: evt.target.value })
+            }
+          />
+          <TextField
+            placeholder="Township"
+            sx={{ mb: 2 }}
+            onChange={(evt) =>
+              setNewLocation({ ...newLocation, township: evt.target.value })
+            }
+          />
+          <TextField
+            placeholder="City"
+            sx={{ mb: 2 }}
+            onChange={(evt) =>
+              setNewLocation({ ...newLocation, city: evt.target.value })
             }
           />
           <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 3 }}>
@@ -57,7 +77,14 @@ const NewLocation = ({ open, setOpen }: Props) => {
               Cancel
             </Button>
             <Button
-              disabled={newLocation.name && newLocation.address ? false : true}
+              disabled={
+                newLocation.name &&
+                newLocation.street &&
+                newLocation.township &&
+                newLocation.city
+                  ? false
+                  : true
+              }
               variant="contained"
               sx={{ width: "fit-content" }}
               onClick={() => {

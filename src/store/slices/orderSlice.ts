@@ -1,6 +1,7 @@
 import {
   CreateOrderOptions,
   OrderSlice,
+  RefreshOrderOptions,
   UpdateOrderOptions,
 } from "@/types/order";
 import { config } from "@/utils/config";
@@ -45,6 +46,25 @@ export const updateOrder = createAsyncThunk(
           headers: { "content-type": "application/json" },
           body: JSON.stringify({ status }),
         }
+      );
+      const { orders } = await response.json();
+      thunkApi.dispatch(setOrders(orders));
+      thunkApi.dispatch(setIsLoading(false));
+      onSuccess && onSuccess(orders);
+    } catch (err) {
+      onError && onError();
+    }
+  }
+);
+
+export const refreshOrder = createAsyncThunk(
+  "order/refreshOrder",
+  async (options: RefreshOrderOptions, thunkApi) => {
+    const { orderSeq, onSuccess, onError } = options;
+    try {
+      thunkApi.dispatch(setIsLoading(true));
+      const response = await fetch(
+        `${config.apiBaseUrl}/orders?orderSeq=${orderSeq}`
       );
       const { orders } = await response.json();
       thunkApi.dispatch(setOrders(orders));

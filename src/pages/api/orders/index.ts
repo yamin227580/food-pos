@@ -11,7 +11,14 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const method = req.method;
-  if (method === "POST") {
+  if (method === "GET") {
+    const isValid = req.query.orderSeq;
+    if (!isValid) return res.status(405).send("missing required fields");
+    const orderSeq = String(req.query.orderSeq);
+    const exist = await prisma.order.findMany({ where: { orderSeq } });
+    if (!exist) return res.status(405).send("bad request");
+    return res.status(200).json({ orders: exist });
+  } else if (method === "POST") {
     const { tableId, cartItems } = req.body;
     const isValid = tableId && cartItems.length;
     if (!isValid) return res.status(400).send("Bad request.");
