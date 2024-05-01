@@ -35,6 +35,7 @@ export const formatOrders = (
     let orderAddons: OrderAddon[] = [];
     addonIds.forEach((addonId) => {
       const addon = addons.find((item) => item.id === addonId) as Addon;
+      if (!addon) return;
       const exist = orderAddons.find(
         (item) => item.addonCategoryId === addon.addonCategoryId
       );

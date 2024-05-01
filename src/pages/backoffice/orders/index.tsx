@@ -18,27 +18,19 @@ const OrdersPage = () => {
   const [value, setValue] = useState<ORDERSTATUS>(ORDERSTATUS.PENDING);
   const dispatch = useAppDispatch();
 
-  const handleOrderStatuUpdate = (itemId: string, status: ORDERSTATUS) => {
-    dispatch(updateOrder({ itemId, status }));
-  };
-
   useEffect(() => {
-    if (value) {
-      const formattedOrders = formatOrders(
-        orders,
-        addons,
-        menus,
-        tables
-      ).filter((item) => item.status === value);
-      setFilterOrders(formattedOrders);
+    if (orders.length) {
+      const filterOrder = formatOrders(orders, addons, menus, tables).filter(
+        (item) => item.status === value
+      );
+      console.log(filterOrder);
+      setFilterOrders(filterOrder);
     }
   }, [orders, value]);
 
-  useEffect(() => {
-    if (orders.length) {
-      setOrderItems(formatOrders(orders, addons, menus, tables));
-    }
-  }, [orders]);
+  const handleOrderStatuUpdate = (itemId: string, status: ORDERSTATUS) => {
+    dispatch(updateOrder({ itemId, status }));
+  };
 
   return (
     <Box>
@@ -48,6 +40,7 @@ const OrdersPage = () => {
           value={value}
           exclusive
           onChange={(evt, value) => {
+            console.log(value);
             setValue(value);
           }}
         >
@@ -62,7 +55,13 @@ const OrdersPage = () => {
           </ToggleButton>
         </ToggleButtonGroup>
       </Box>
-      <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: { xs: "center", sm: "flex-start" },
+        }}
+      >
         {filterOrders.map((orderItem) => {
           return (
             <OrderCard

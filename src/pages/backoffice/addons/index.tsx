@@ -15,7 +15,13 @@ const AddonPage = () => {
           New addon
         </Button>
       </Box>
-      <Box sx={{ display: "flex", flexDirection: "wrap" }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "wrap",
+          justifyContent: { xs: "center", sm: "flex-start" },
+        }}
+      >
         {addons.map((item) => (
           <ItemCard
             key={item.id}

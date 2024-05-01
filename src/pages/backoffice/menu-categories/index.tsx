@@ -18,7 +18,13 @@ const MenuCategoriesPage = () => {
           New menu category
         </Button>
       </Box>
-      <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: { xs: "center", sm: "flex-start" },
+        }}
+      >
         {menuCategories.map((item) => {
           const exist = disalbedLocationmenuCategories?.find(
             (disalbedLocationmenuCategory) =>

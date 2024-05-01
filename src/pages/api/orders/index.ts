@@ -75,7 +75,7 @@ export default async function handler(
       where: { itemId },
     });
     const orders = await prisma.order.findMany({
-      where: { orderSeq, isArchived: false },
+      where: { tableId: exist.tableId, isArchived: false },
       orderBy: { id: "asc" },
     });
     return res.status(200).json({ orders });
