@@ -141,7 +141,7 @@ const AddonCategoryDetail = () => {
                 (item) =>
                   //for there is not exist the delete menu, check this => item !== undefined
                   item !== undefined && (
-                    <Chip label={item.name} sx={{ mr: 1 }} />
+                    <Chip key={item.id} label={item.name} sx={{ mr: 1 }} />
                   )
               );
           }}

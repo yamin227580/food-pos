@@ -33,6 +33,7 @@ const MenusPage = () => {
       >
         {tables.map((item) => (
           <Box
+            key={item.id}
             sx={{
               display: "flex",
               flexDirection: "column",
@@ -42,7 +43,6 @@ const MenusPage = () => {
             <ItemCard
               href={`/backoffice/tables/${item.id}`}
               icon={<TableBarIcon fontSize="large" />}
-              key={item.id}
               title={item.name}
             />
             <Button
