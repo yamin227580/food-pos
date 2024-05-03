@@ -34,7 +34,7 @@ const OrderCard = ({ orderItem, isAdmin, handleOrderStatuUpdate }: Props) => {
           bgcolor: "primary.main",
           height: 40,
           px: 2,
-          color: "white",
+          color: "black",
         }}
       >
         <Typography>{orderItem.menu?.name}</Typography>

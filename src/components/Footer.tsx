@@ -7,7 +7,7 @@ const Footer = () => {
     <Box
       sx={{
         height: 150,
-        bgcolor: "#4C4C6D",
+        bgcolor: "primary.main",
         px: "12px",
       }}
     >
@@ -30,7 +30,7 @@ const Footer = () => {
           }}
         >
           <Box>
-            <Typography sx={{ color: "#E8F6EF", fontStyle: "italic" }}>
+            <Typography sx={{ color: "black", fontStyle: "italic" }}>
               Hintada Street 39 <br />
               Sanchaung, Yangon <br />
               contact@foodiepos.com
@@ -41,12 +41,12 @@ const Footer = () => {
           <Image alt="logo" src={"/logo.png"} width={150} height={80} />
           <Box>
             <Link href={"/order?tableId=1"} style={{ textDecoration: "none" }}>
-              <Typography sx={{ color: "#E8F6EF", fontStyle: "italic" }}>
+              <Typography sx={{ color: "black", fontStyle: "italic" }}>
                 Order app
               </Typography>
             </Link>
             <Link href={"/backoffice"} style={{ textDecoration: "none" }}>
-              <Typography sx={{ color: "#E8F6EF", fontStyle: "italic" }}>
+              <Typography sx={{ color: "black", fontStyle: "italic" }}>
                 Backoffice
               </Typography>
             </Link>

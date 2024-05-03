@@ -32,7 +32,10 @@ const LocationPage = () => {
             icon={<LocationOnIcon />}
             title={item.name}
             selected={item.id === selectedLocation?.id}
-            onClick={() => dispatch(setSelectedLocation(item))}
+            onClick={() => {
+              dispatch(setSelectedLocation(item));
+              localStorage.setItem("selectedLocationId", String(item.id));
+            }}
           />
         ))}
       </Box>

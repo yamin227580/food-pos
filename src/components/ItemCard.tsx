@@ -77,7 +77,7 @@ const ItemCard = ({
             top: 10,
             right: 10,
             fontSize: "30px",
-            color: "#1B9C85",
+            color: "primary.main",
           }}
         />
       )}

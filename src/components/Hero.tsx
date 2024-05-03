@@ -46,7 +46,7 @@ const Hero = () => {
                   fontSize: { xs: "16px", md: "20px" },
                   mr: 2,
                   width: "fit-content",
-                  backgroundColor: "#4C4C6D",
+                  backgroundColor: "primary.main",
                 }}
               >
                 Order App
@@ -58,7 +58,7 @@ const Hero = () => {
                 sx={{
                   fontSize: { xs: "16px", md: "20px" },
                   width: "fit-content",
-                  backgroundColor: "#4C4C6D",
+                  backgroundColor: "primary.main",
                 }}
               >
                 Backoffice App

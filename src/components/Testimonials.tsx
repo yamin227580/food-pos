@@ -47,7 +47,7 @@ const Testimonials = () => {
                 mb: 3,
                 borderRadius: 3,
                 position: "relative",
-                bgcolor: "#1B9C85",
+                bgcolor: "#FBF8DD",
               }}
             >
               <Box
@@ -65,7 +65,7 @@ const Testimonials = () => {
                     sx={{
                       fontSize: "14px",
                       fontStyle: "italic",
-                      color: "#E8F6EF",
+                      color: "black",
                     }}
                   >
                     {item.name}
@@ -74,7 +74,7 @@ const Testimonials = () => {
                     sx={{
                       fontSize: "14px",
                       fontStyle: "italic",
-                      color: "#E8F6EF",
+                      color: "black",
                     }}
                   >
                     {item.company}
@@ -83,7 +83,7 @@ const Testimonials = () => {
               </Box>
               <Typography
                 variant="body1"
-                sx={{ fontSize: "16px", color: "#E8F6EF" }}
+                sx={{ fontSize: "16px", color: "black" }}
               >
                 {item.description}
               </Typography>

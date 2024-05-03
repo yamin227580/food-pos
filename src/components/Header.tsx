@@ -50,7 +50,7 @@ const Header = () => {
         sx={{
           position: "absolute",
           fontWeight: "bold",
-          color: "#4C4C6D",
+          color: "primary.main",
           mt: 4,
         }}
       >

@@ -105,7 +105,7 @@ const Cart = () => {
                       width: 25,
                       height: 25,
                       mr: 1,
-                      backgroundColor: "#1B9C85",
+                      backgroundColor: "#A34343",
                     }}
                   >
                     {quantity}

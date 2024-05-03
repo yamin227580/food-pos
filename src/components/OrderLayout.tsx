@@ -66,7 +66,7 @@ const OrderLayout = (props: Props) => {
             })
           }
         >
-          <Typography sx={{ color: "secondary.main", userSelect: "none" }}>
+          <Typography sx={{ color: "#4C4C6D", userSelect: "none" }}>
             You have active orders.Click here to view.
           </Typography>
         </Box>
