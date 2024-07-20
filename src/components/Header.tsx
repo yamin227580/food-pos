@@ -51,7 +51,7 @@ const Header = () => {
           position: "absolute",
           fontWeight: "bold",
           color: "primary.main",
-          mt: 4,
+          mt: { xs: 10, sm: 4 },
         }}
       >
         Foodie POS

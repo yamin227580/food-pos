@@ -18,7 +18,7 @@ const AddonPage = () => {
       <Box
         sx={{
           display: "flex",
-          flexDirection: "wrap",
+          flexWrap: "wrap",
           justifyContent: { xs: "center", sm: "flex-start" },
         }}
       >

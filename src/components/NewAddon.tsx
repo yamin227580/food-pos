@@ -65,72 +65,77 @@ const NewAddon = ({ open, setOpen }: Props) => {
         setOpen(false);
         setNewAddon(defaultNewAddon);
       }}
+      sx={{
+        "& .MuiDialog-container": {
+          "& .MuiPaper-root": {
+            width: "100%",
+            maxWidth: "400px", // Set your width here
+          },
+        },
+      }}
     >
       <DialogTitle>Create new addon</DialogTitle>
-      <DialogContent>
-        <DialogContent
-          sx={{ display: "flex", flexDirection: "column", width: 400 }}
-        >
-          <TextField
-            placeholder="Name"
-            sx={{ mb: 2 }}
-            onChange={(evt) =>
-              setNewAddon({ ...newAddon, name: evt.target.value })
-            }
-          />
-          <TextField
-            placeholder="Price"
-            sx={{ mb: 2 }}
-            onChange={(evt) =>
-              setNewAddon({ ...newAddon, price: Number(evt.target.value) })
-            }
-          />
-          <FormControl fullWidth>
-            <InputLabel>Addon Category</InputLabel>
-            <Select
-              value={newAddon.addonCategoryId}
-              label="Addon Category"
-              onChange={handleOnChange}
-              renderValue={(selectedAddonCategoryId) => {
-                return (
-                  addonCategories.find(
-                    (item) => item.id === selectedAddonCategoryId
-                  ) as AddonCategory
-                ).name;
-              }}
-              MenuProps={{
-                PaperProps: {
-                  style: {
-                    maxHeight: 48 * 4.5 + 8,
-                    width: 250,
-                  },
+
+      <DialogContent sx={{ display: "flex", flexDirection: "column" }}>
+        <TextField
+          placeholder="Name"
+          sx={{ mb: 2 }}
+          onChange={(evt) =>
+            setNewAddon({ ...newAddon, name: evt.target.value })
+          }
+        />
+        <TextField
+          placeholder="Price"
+          sx={{ mb: 2 }}
+          onChange={(evt) =>
+            setNewAddon({ ...newAddon, price: Number(evt.target.value) })
+          }
+        />
+        <FormControl fullWidth>
+          <InputLabel>Addon Category</InputLabel>
+          <Select
+            value={newAddon.addonCategoryId}
+            label="Addon Category"
+            onChange={handleOnChange}
+            renderValue={(selectedAddonCategoryId) => {
+              return (
+                addonCategories.find(
+                  (item) => item.id === selectedAddonCategoryId
+                ) as AddonCategory
+              ).name;
+            }}
+            MenuProps={{
+              PaperProps: {
+                style: {
+                  maxHeight: 48 * 4.5 + 8,
+                  width: 250,
                 },
-              }}
-            >
-              {addonCategories.map((item) => (
-                <MenuItem key={item.id} value={item.id}>
-                  <ListItemText primary={item.name} />
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-end" }}>
-            <Button
-              variant="contained"
-              sx={{ mr: 2 }}
-              onClick={() => setOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="contained"
-              disabled={!newAddon.name || !newAddon.addonCategoryId}
-              onClick={handleCreateAddon}
-            >
-              Confirm
-            </Button>
-          </Box>
-        </DialogContent>
+              },
+            }}
+          >
+            {addonCategories.map((item) => (
+              <MenuItem key={item.id} value={item.id}>
+                <ListItemText primary={item.name} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-end" }}>
+          <Button
+            variant="contained"
+            sx={{ mr: 2 }}
+            onClick={() => setOpen(false)}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            disabled={!newAddon.name || !newAddon.addonCategoryId}
+            onClick={handleCreateAddon}
+          >
+            Confirm
+          </Button>
+        </Box>
       </DialogContent>
     </Dialog>
   );

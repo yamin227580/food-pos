@@ -79,9 +79,17 @@ const NewAddonCategory = ({ open, setOpen }: Props) => {
         setNewAddonCategory(defaultNewAddonCategory);
         setOpen(false);
       }}
+      sx={{
+        "& .MuiDialog-container": {
+          "& .MuiPaper-root": {
+            width: "100%",
+            maxWidth: "400px", // Set your width here
+          },
+        },
+      }}
     >
       <DialogTitle>Create new addon category</DialogTitle>
-      <DialogContent sx={{ width: 300 }}>
+      <DialogContent>
         <TextField
           onChange={(evt) =>
             setNewAddonCategory({ ...newAddonCategory, name: evt.target.value })

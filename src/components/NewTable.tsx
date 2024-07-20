@@ -43,11 +43,17 @@ const NewTable = ({ open, setOpen }: Props) => {
         setOpen(false);
         setNewTable(defaultNewTable);
       }}
+      sx={{
+        "& .MuiDialog-container": {
+          "& .MuiPaper-root": {
+            width: "100%",
+            maxWidth: "400px", // Set your width here
+          },
+        },
+      }}
     >
       <DialogTitle>Create new table</DialogTitle>
-      <DialogContent
-        sx={{ display: "flex", flexDirection: "column", width: 400 }}
-      >
+      <DialogContent sx={{ display: "flex", flexDirection: "column" }}>
         <TextField
           placeholder="Name"
           sx={{ mb: 2 }}
