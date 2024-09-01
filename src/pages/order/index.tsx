@@ -44,8 +44,8 @@ const OrderApp = () => {
   };
 
   return (
-    <Box sx={{ position: "relative", zIndex: 5, px: 2, top: { sm: 240 } }}>
-      <Box>
+    <Box sx={{ position: "relative", px: 2, top: { sm: 240 } }}>
+      <Box sx={{ position: "fixed", top: { xs: 60, sm: 220 }, zIndex: 10 }}>
         <Tabs
           TabIndicatorProps={{
             style: { background: "#1B9C85" },
@@ -75,8 +75,10 @@ const OrderApp = () => {
       <Box
         sx={{
           display: "flex",
-          pt: 2,
+          pt: { xs: 15, sm: 6 },
+
           flexWrap: "wrap",
+
           justifyContent: { xs: "center", sm: "flex-start" },
         }}
       >

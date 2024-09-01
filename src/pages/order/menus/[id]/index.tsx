@@ -93,6 +93,7 @@ const MenuDetail = () => {
           justifyContent: "center",
           flexDirection: "column",
           p: 4,
+          mt: { xs: 4 },
         }}
       >
         <Image

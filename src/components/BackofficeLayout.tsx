@@ -2,6 +2,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchAppData } from "@/store/slices/appSlice";
 import { Box } from "@mui/material";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import { ReactNode, useEffect } from "react";
 import SideBar from "./Sidebar";
 import Topbar from "./Topbar";
@@ -11,7 +12,8 @@ interface Props {
 }
 const BackofficeLayout = ({ children }: Props) => {
   const { data: session } = useSession();
-  const { init } = useAppSelector((state) => state.app);
+  const init = useAppSelector((state) => state.app.init);
+  const { isReady, ...router } = useRouter();
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -19,6 +21,12 @@ const BackofficeLayout = ({ children }: Props) => {
       dispatch(fetchAppData({}));
     }
   }, [session]);
+
+  useEffect(() => {
+    if (isReady && !session) {
+      router.push("/backoffice");
+    }
+  }, [isReady]);
 
   return (
     <Box>

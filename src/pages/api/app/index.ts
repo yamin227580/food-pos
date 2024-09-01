@@ -78,7 +78,7 @@ export default async function handler(
         where: { tableId: { in: tableIds } },
       });
       return res.status(200).json({
-        locations: [],
+        locations: [location],
         menuCategories,
         menus,
         menuCategoryMenus,

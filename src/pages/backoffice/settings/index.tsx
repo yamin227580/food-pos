@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 
 const SettingsPage = () => {
   const company = useAppSelector((state) => state.company.item);
+  const theme = useAppSelector((state) => state.app.theme);
 
   const [data, setData] = useState<UpdateCompanyOptions>();
   const dispatch = useAppDispatch();
@@ -30,6 +31,21 @@ const SettingsPage = () => {
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
+      {/* <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={theme === "dark"}
+              onChange={(evt, value) => {
+                const theme = value ? "dark" : "light";
+                dispatch(setTheme(theme));
+                localStorage.setItem("theme", theme);
+              }}
+            />
+          }
+          label="Use dark mode"
+        />
+      </Box> */}
       <TextField
         defaultValue={data.name}
         sx={{ mb: 2 }}

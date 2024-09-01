@@ -82,11 +82,12 @@ const Cart = () => {
       }}
     >
       {!cartItems.length ? (
-        <Typography>Your cart is empty</Typography>
+        <Typography sx={{ mt: { xs: 6 } }}>Your cart is empty</Typography>
       ) : (
         <Box
           sx={{
             width: { xs: "100%", md: "500px" },
+            mt: { xs: 6 },
           }}
         >
           <Typography

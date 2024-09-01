@@ -1,21 +1,44 @@
+import { store } from "@/store";
 import { createTheme } from "@mui/material";
 
-export const theme = createTheme({
-  palette: {
-    primary: {
-      main: "#E9C874",
-    },
-    secondary: {
-      main: "#FBF8DD",
-    },
-    info: {
-      main: "#E8F6EF",
-    },
-    success: {
-      main: "#A34343",
-    },
-  },
-});
-//1B9C85 success
-//4C4C6D primary
-//FFE194 secondary
+const getDesignTokens = () => {
+  const state = store.getState();
+  const { theme } = state.app;
+
+  if (theme === "light") {
+    return {
+      palette: {
+        primary: {
+          main: "#E9C874",
+        },
+        secondary: {
+          main: "#FBF8DD",
+        },
+        info: {
+          main: "#E8F6EF",
+        },
+        success: {
+          main: "#A34343",
+        },
+      },
+    };
+  } else {
+    return {
+      palette: {
+        primary: {
+          main: "#e63946",
+        },
+        secondary: {
+          main: "#a8dadc",
+        },
+        info: {
+          main: "#f1faee",
+        },
+        success: {
+          main: "#1d3557",
+        },
+      },
+    };
+  }
+};
+export const theme = createTheme(getDesignTokens());

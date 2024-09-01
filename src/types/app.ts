@@ -1,5 +1,7 @@
+export type Theme = "light" | "dark";
 export interface AppSlice {
   init: boolean;
+  theme: Theme;
   isLoading: boolean;
   error: Error | null;
 }

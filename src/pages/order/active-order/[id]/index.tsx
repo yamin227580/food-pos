@@ -45,6 +45,7 @@ const ActiveOrder = () => {
           mx: 3,
           flexDirection: "column",
           alignItems: "center",
+          mt: { xs: 4 },
         }}
       >
         <Typography>OrderSeq: {orderSeq}</Typography>

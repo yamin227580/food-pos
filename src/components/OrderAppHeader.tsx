@@ -22,11 +22,15 @@ const OrderAppHeader = ({ cartItemCount }: Props) => {
     <Box>
       <Box
         sx={{
+          position: "fixed",
+          top: 0,
           bgcolor: "success.main",
           height: 60,
           display: { xs: "flex", sm: "none" },
           justifyContent: "space-between",
           alignItems: "center",
+          zIndex: 10,
+          width: "100vw",
           px: 2,
         }}
       >
@@ -39,7 +43,7 @@ const OrderAppHeader = ({ cartItemCount }: Props) => {
         >
           {company?.name}
         </Typography>
-        <Box sx={{ position: "relative" }}>
+        <Box sx={{ position: "relative", mr: 4 }}>
           {isCartOrActiveOrderPage ? (
             <Home
               onClick={() =>

@@ -16,6 +16,7 @@ import { setTables } from "./tableSlice";
 
 const initialState: AppSlice = {
   init: false,
+  theme: "light",
   isLoading: false,
   error: null,
 };
@@ -59,6 +60,7 @@ export const fetchAppData = createAsyncThunk(
         setDisabledLocationMenuCategories(disabledLocationMenuCategories)
       );
       thunkApi.dispatch(setDisabledLocationMenus(disabledLocationMenus));
+      thunkApi.dispatch(setTheme(localStorage.getItem("theme") ?? "light"));
       onSuccess && onSuccess();
 
       thunkApi.dispatch(setInit(true));
@@ -75,8 +77,11 @@ const appSlice = createSlice({
     setInit: (state, action) => {
       state.init = action.payload;
     },
+    setTheme: (state, action) => {
+      state.theme = action.payload;
+    },
   },
 });
 
-export const { setInit } = appSlice.actions;
+export const { setInit, setTheme } = appSlice.actions;
 export default appSlice.reducer;
