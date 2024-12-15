@@ -19,7 +19,7 @@ export const fileUpload = multer({
     bucket: "my-project-image-storage",
     acl: "public-read",
     key: (request, file, cb) => {
-      cb(null, `foodie-pos/nilar/${Date.now()}_${file.originalname}`);
+      cb(null, `foodie-pos/ymn/${Date.now()}_${file.originalname}`);
     },
   }),
 }).array("files", 1);
@@ -37,7 +37,7 @@ export const qrCodeImageUpload = async (tableId: number) => {
 
     const input = {
       Bucket: "my-project-image-storage",
-      Key: `foodie-pos/nilar/qrcode/tableId-${tableId}.png`,
+      Key: `foodie-pos/ymn/qrcode/tableId-${tableId}.png`,
       ACL: "public-read",
       Body: Buffer.from(
         qrImageData.replace(/^data:image\/\w+;base64,/, ""),
@@ -53,5 +53,5 @@ export const qrCodeImageUpload = async (tableId: number) => {
 };
 
 export const getQrCodeUrl = (tableId: number) => {
-  return `https://my-project-image-storage.sgp1.digitaloceanspaces.com/foodie-pos/nilar/qrcode/tableId-${tableId}.png`;
+  return `https://my-project-image-storage.sgp1.digitaloceanspaces.com/foodie-pos/ymn/qrcode/tableId-${tableId}.png`;
 };
