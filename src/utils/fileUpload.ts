@@ -1,4 +1,4 @@
-import { S3Client } from "@aws-sdk/client-s3";
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import multer from "multer";
 import multerS3 from "multer-s3";
 import QRCode from "qrcode";
@@ -16,7 +16,7 @@ const s3Client = new S3Client({
 export const fileUpload = multer({
   storage: multerS3({
     s3: s3Client,
-    bucket: "msquarefdc",
+    bucket: "my-project-image-storage",
     acl: "public-read",
     key: (request, file, cb) => {
       cb(null, `foodie-pos/nilar/${Date.now()}_${file.originalname}`);
@@ -36,7 +36,7 @@ export const qrCodeImageUpload = async (tableId: number) => {
     });
 
     const input = {
-      Bucket: "msquarefdc",
+      Bucket: "my-project-image-storage",
       Key: `foodie-pos/nilar/qrcode/tableId-${tableId}.png`,
       ACL: "public-read",
       Body: Buffer.from(
@@ -53,5 +53,5 @@ export const qrCodeImageUpload = async (tableId: number) => {
 };
 
 export const getQrCodeUrl = (tableId: number) => {
-  return `https://msquarefdc.sgp1.cdn.digitaloceanspaces.com/foodie-pos/nilar/qrcode/tableId-${tableId}.png`;
+  return `https://my-project-image-storage.sgp1.digitaloceanspaces.com/foodie-pos/nilar/qrcode/tableId-${tableId}.png`;
 };
